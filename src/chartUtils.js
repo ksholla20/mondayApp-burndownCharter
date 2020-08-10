@@ -28,6 +28,8 @@ export function LineGraph(props) {
     })),
   };
   const options = {
+    responsive: true,
+    maintainAspectRatio: false,
     scales: {
       yAxes: [{
         ticks: {

@@ -28,6 +28,7 @@ class App extends React.Component {
     };
   }
 
+    
     updateChartData(groupId, groupTitle) {
       const items = this.state.boardData.boards[0].items.filter((v=>(v.group.id === groupId))).map((val)=>({
           "id": val.id,
@@ -56,6 +57,7 @@ class App extends React.Component {
       initializeIcons();
       monday.listen("settings", res => {
       this.setState({ settings: res.data });
+      window.addEventListener('resize', this.updateWindowDimensions);
     });
       
     monday.listen("context", res => {
@@ -113,7 +115,7 @@ class App extends React.Component {
               onChange={this.onGroupSelect}
             />
         }
-        <div style={{background: (this.state.settings.background || "white")}} ref={this.componentRef}>
+        <div style={{background: (this.state.settings.background || "white"), height: "70%"}} ref={this.componentRef}>
           {this.state.lineData && <LineGraph data={this.state.lineData}/>}
         </div>
         {this.state.lineData && 

@@ -15,6 +15,7 @@ And then to run an application with automatic virtual ngrok tunnel, run:
 
 Visit http://localhost:4040/status and under "command_line section" find the URL. This is the public URL of your app, so you can use it to test it.
 F.e.: https://021eb6330099.ngrok.io
+Or, run `curl http://127.0.0.1:4040/api/tunnels` and use https public_url
 
 ## Configure Monday App 
 
