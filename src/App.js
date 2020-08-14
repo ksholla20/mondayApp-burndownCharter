@@ -36,10 +36,11 @@ class App extends React.Component {
           "status": val.column_values.filter((cval)=>(cval.title === "Status"))[0].text,
           "estimate": Number(val.column_values.filter((cval)=>(cval.title === "Time Est."))[0].text),
       }));
+        console.log(items);
       const tot = items.reduce((acc,val)=>acc+val.estimate,0);
       const dn = items
       .filter((val)=>(val.status === "Done"))
-      .map((val)=>({...val, "last_updated": val.updates.filter((vl=>(vl.text_body.split("").reverse().join("").indexOf("enoD") === 0)))[0].updated_at}))
+      .map((val)=>({...val, "last_updated": val.updates.filter((vl=>(vl.text_body.split("").reverse().join("").indexOf("enoD") === 0)))[0].created_at}))
       .reduce(function(acc,val){const d = new Date(val.last_updated); const str = [d.getFullYear(),d.getMonth(),d.getDate()].join("/");acc[str] = ((str in acc)?acc[str]:0)+val.estimate; return acc},{});
       const cumulativeSum = (sum => value => sum -= value)(tot);
       const burnStatus = Object.keys(dn).map((k)=>({"date":k,"val":dn[k]})).sort((a,b)=>(new Date(a.date)).getTime() - (new Date(b.date)).getTime()).map((v)=>({...v,"cur":cumulativeSum(v.val)}));
@@ -50,6 +51,7 @@ class App extends React.Component {
               "data": [tot, ...burnStatus.map((v)=>(v.cur))]
           }]
       };
+        console.log(lineData);
       this.setState({lineData:lineData, selectedGroupId:groupId, selectedGroupTitle:groupTitle});
   }
 
@@ -62,7 +64,7 @@ class App extends React.Component {
       
     monday.listen("context", res => {
       this.setState({context: res.data});
-      monday.api(`query ($boardIds: [Int]) { boards (ids:$boardIds) { name items {name id group { id } updates {text_body updated_at} column_values { title text } } top_group { id title }  groups { id title } } }`,
+      monday.api(`query ($boardIds: [Int]) { boards (ids:$boardIds) { name items {name id group { id } updates {text_body created_at} column_values { title text } } top_group { id title }  groups { id title } } }`,
         { variables: {boardIds: this.state.context.boardIds} }
       )
       .then(res => {
